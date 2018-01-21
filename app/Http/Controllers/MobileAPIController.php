@@ -14,6 +14,7 @@ class MobileAPIController extends Controller
         $user = new User();
         $user->name = $request->input('name');
         $user->email = $request->input('email');
+        $user->picture = $request->input('picture');
         $user->password = bcrypt($request->input('password'));
 
         if(User::where('email', $user->email)->first())
@@ -46,12 +47,11 @@ class MobileAPIController extends Controller
     public function login(Request $request)
     {
         $email = $request->input('email');
-        $password =  hash("sha256", $request->input('password'));
+        $password =  bcrypt($request->input('password'));
         $user= User::where('email', $email)->where('password', $password)->first();
 
         if($user)
         {
-
             $response['success'] = 1;
             return response()->json($response, 200);
         }
@@ -62,5 +62,6 @@ class MobileAPIController extends Controller
             return response()->json($response, 200);
         }
     }
+
 }
 
